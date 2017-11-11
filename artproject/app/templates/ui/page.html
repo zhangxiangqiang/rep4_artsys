@@ -1,0 +1,41 @@
+<div class="col-md-12 text-center" style="margin-top:12px;">
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <li>
+                <a href="{{ arr['url']}}?page=1&key={{ arr['key'] }}" aria-label="First">
+                    <span aria-hidden="true">首页</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ arr['url']}}?page={{ arr['prev'] }}&key={{ arr['key'] }}"
+                   aria-label="Previous">
+                    <span aria-hidden="true">上一页</span>
+                </a>
+            </li>
+            {% for v in arr["pagerange"] %}
+            {% if v == arr["page"] %}
+            <li class="active"><a href="{{ arr['url'] }}?page={{ v }}&key={{ arr['key'] }}">{{ v
+                }}</a></li>
+            {% else %}
+            <li><a href="{{ arr['url'] }}?page={{ v }}&key={{ arr['key'] }}">{{ v }}</a></li>
+            {% end %}
+            {% end %}
+            <li>
+                <a href="{{ arr['url']}}?page={{ arr['next'] }}&key={{ arr['key'] }}"
+                   aria-label="Next">
+                    <span aria-hidden="true">下一页</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ arr['url']}}?page={{ arr['pagenum'] }}&key={{ arr['key'] }}"
+                   aria-label="Last">
+                    <span aria-hidden="true">尾页</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <a class="label label-success" style="display:inline-block;width:150px;">共{{ arr['pagenum']
+        }}页</a>
+    &nbsp;
+    <a class="label label-info" style="display:inline-block;width:150px;">共{{ arr['total'] }}条记录</a>
+</div>

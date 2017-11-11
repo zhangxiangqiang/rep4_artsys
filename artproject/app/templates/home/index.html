@@ -1,0 +1,92 @@
+{% extends "home.html" %}
+{% block content %}
+<!--文章列表-->
+<section id="artlist" style="margin-top:76px">
+    <div class="container">
+        <div class="row wow fadeIn" data-wow-delay="0.6s">
+            <div class="col-md-12 table-responsive">
+                <table class="table text-left table-bordered" id="arttags">
+                    <tr>
+                        <td style="width:10%;">文章标签</td>
+                        <td style="width:90%;">
+                            <a class="label label-info" id="curtag0" href="{{ arr['url'] }}?t=0"><span
+                                    class="glyphicon glyphicon-tag"></span>&nbsp;全部</a>
+                            {% for v in arr['tags'] %}
+                            <a class="label label-info" id="curtag{{ v[0] }}" href="{{ arr['url'] }}?t={{ v[0] }}"><span
+                                    class="glyphicon glyphicon-tag"></span>&nbsp;{{ v[1] }}</a>
+                            &nbsp;
+                            {% end %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            {% for v in arr['data'] %}
+            <div class="col-md-3">
+                <div class="artlist text-center">
+                    <!--<img data-original="holder.js/262x166"
+                             class="img-responsive lazy center-block" alt="">-->
+                    <img data-original="/static/uploads/{{ v[3] }}" style="width:262px;height:166px;"
+                         class="img-responsive center-block lazy" alt="">
+                    <div class="text-left" style="margin-left:auto;margin-right:auto;width:210px;">
+                        <span style="color:#999;font-style: italic;">{{ v[1] }}</span><br>
+                        <p>{{ v[2] }}</p>
+                    </div>
+                    <a href="detail.html?id={{ v[0] }}" class="btn btn-primary" target="_blank" role="button"><span
+                            class="glyphicon glyphicon-eye-open"></span>&nbsp;阅读</a>
+                </div>
+            </div>
+            {% end %}
+            <div class="col-md-12 text-center" style="margin-top:12px;">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <li>
+                            <a href="{{ arr['url']}}?page=1&t={{ arr['t'] }}" aria-label="First">
+                                <span aria-hidden="true">首页</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ arr['url']}}?page={{ arr['prev'] }}&t={{ arr['t'] }}"
+                               aria-label="Previous">
+                                <span aria-hidden="true">上一页</span>
+                            </a>
+                        </li>
+                        {% for v in arr["pagerange"] %}
+                        {% if v == arr["page"] %}
+                        <li class="active"><a href="{{ arr['url'] }}?page={{ v }}&t={{ arr['t'] }}">{{ v
+                            }}</a></li>
+                        {% else %}
+                        <li><a href="{{ arr['url'] }}?page={{ v }}&t={{ arr['t'] }}">{{ v }}</a></li>
+                        {% end %}
+                        {% end %}
+                        <li>
+                            <a href="{{ arr['url']}}?page={{ arr['next'] }}&t={{ arr['t'] }}"
+                               aria-label="Next">
+                                <span aria-hidden="true">下一页</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ arr['url']}}?page={{ arr['pagenum'] }}&t={{ arr['t'] }}"
+                               aria-label="Last">
+                                <span aria-hidden="true">尾页</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <a class="label label-success" style="display:inline-block;width:150px;">共{{ arr['pagenum']
+                    }}页</a>
+                &nbsp;
+                <a class="label label-info" style="display:inline-block;width:150px;">共{{ arr['total'] }}条记录</a>
+            </div>
+        </div>
+    </div>
+</section>
+<!--电影列表-->
+{% end %}
+
+{% block js %}
+<script>
+    $(document).ready(function(){
+        $("#curtag{{ arr['t'] }}").attr("class","label label-danger");
+    });
+</script>
+{% end %}

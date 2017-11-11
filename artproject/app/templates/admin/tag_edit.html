@@ -1,0 +1,107 @@
+{% extends "admin.html" %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="page-header">标签管理/{% if id != None %}修改{% else %}编辑{% end %}标签</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        {% if id != None %}修改{% else %}编辑{% end %}标签
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-bordered">
+                            {% if id != None %}
+                            <tr>
+                                <td style="width:10%">名称</td>
+                                <td>
+                                    <input type="text" class="form-control" id="input_name" value="{{ tag[1] }}">
+                                </td>
+                                <td id="error_name" style="width:30%"></td>
+                            </tr>
+                            <tr>
+                                <td>简介</td>
+                                <td>
+                                    <textarea id="input_info" rows=10 class="form-control">{{ tag[2] }}</textarea>
+                                </td>
+                                <td id="error_info"></td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td style="width:10%">名称</td>
+                                <td>
+                                    <input type="text" class="form-control" id="input_name">
+                                </td>
+                                <td id="error_name" style="width:30%"></td>
+                            </tr>
+                            <tr>
+                                <td>简介</td>
+                                <td>
+                                    <textarea id="input_info" rows=10 class="form-control"></textarea>
+                                </td>
+                                <td id="error_info"></td>
+                            </tr>
+                            {% end %}
+                            <tr>
+                                <td colspan="3">
+                                    {% if id != None %}
+                                        <input type="hidden" value="{{ tag[0] }}" id="input_id">
+                                    {% else %}
+                                        <input type="hidden" value="0" id="input_id">
+                                    {% end %}
+                                    <a class="btn btn-success pull-left" id="btn-sub">
+                                        <span class="glyphicon glyphicon-edit"></span>
+                                        {% if id != None %}修改{% else %}编辑{% end %}
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% end %}
+
+{% block js %}
+    <script>
+        function getCookie(name) {
+	        var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+	        return r ? r[1] : undefined;
+        }
+        $(document).ready(function(){
+            $("#btn-sub").click(function(){
+                var name = $("#input_name").val();
+                var info = $("#input_info").val();
+                var _xsrf = getCookie("_xsrf")
+                var id = $("#input_id").val()
+                var data = {"name":name,"info":info,"_xsrf":_xsrf,"id":id};
+                $.ajax({
+                    url:"/tag_edit.html",
+                    type:"POST",
+                    data:data,
+                    dataType:"json",
+                    success:function(re){
+                        if(re.ok == 1){
+                            location.href = "/tag_list.html";
+                        }else{
+                            var fields = ["name","info"];
+                            for(v in fields){
+                                if(typeof re[fields[v]] == "undefined"){
+                                    $("#error_"+fields[v]).empty();
+                                }else{
+                                    $("#error_"+fields[v]).empty();
+                                    $("#error_"+fields[v]).append("<font style='color:red'>"+re[fields[v]]+"</font>");
+                                }
+                            }
+                        }
+                    }
+                });
+            })
+        })
+    </script>
+{% end %}

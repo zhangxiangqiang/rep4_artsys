@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>注册</title>
+</head>
+
+<body>
+
+    <div class="panel-body" >
+        <form role="form" method="post" action="/register.html ">
+            <div class="form-group" >
+                <input class="form-control" style="width:20%;height:30px;" placeholder="请输入管理员名称" name="name" type="text" autofocus id="input_email">
+                <div class="col-md-12" id="error_email" style="margin-bottom:10px;"></div>
+            </div>
+
+            <div class="form-group">
+                {% module xsrf_form_html() %}
+                <input class="form-control" style="width:20%;height:30px;" placeholder="请输入管理员密码" name="pwd" type="password" value="" id="input_pwd1">
+                <div class="col-md-12" id="error_password1" style="margin-bottom:10px;"></div>
+            </div>
+            <div class="form-group">
+                <input class="form-control"  style="width:20%;height:30px" placeholder="请确认密码" name="name" type="text" autofocus id="input_pwd2">
+                <div class="col-md-12" id="error_password2" style="margin-bottom:10px;"></div>
+            </div>
+            <a class="btn btn-lg btn-success btn-block" id="register-btn">立即注册</a>
+
+        </form>
+        <a href='/login.html'>[已有帐号，请直接登录]</a>
+    </div>
+<script src="{{ static_url('admin/bower_components/jquery/dist/jquery.min.js') }}"></script>
+<script>
+    function getCookie(name) {
+	        var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+	        return r ? r[1] : undefined;
+        }
+    $(document).ready(function () {
+        $("#register-btn").click(function() {
+            var email = $("#input_email").val();
+            var password1 = $("#input_pwd1").val();
+            var password2 = $("#input_pwd2").val();
+            var _xsrf = getCookie("_xsrf");
+            $.ajax({
+                    url: "/register.html",
+                    type: "POST",
+                    data: {"email": email, "password1": password1, "password2": password2, "_xsrf": _xsrf},
+                    dataType: "json",
+                    success: function (re){
+                        if (re.ok == 1) {
+                            location.href = "/login.html";
+                        } else {
+                            var fields = ["email", "password1", "password2"];
+                            for (v in fields) {
+                                if (typeof re[fields[v]] == "undefined") {
+                                    $("#error_" + fields[v]).empty();
+                                } else {
+                                    $("#error_" + fields[v]).empty();
+                                    $("#error_" + fields[v]).append("<font style='color:red'>" + re[fields[v]] + "</font>");
+                                }
+                            }
+                        }
+                    }
+
+
+                }
+            )
+
+        })
+    })
+
+
+</script>
+
+</body>
+</html>
